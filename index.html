@@ -5,27 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OptFOOD - Reducing Food Waste Together</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
-        
         function toggleMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         }
+
+        // Smooth scrolling for anchor links
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        const mobileMenu = document.getElementById('mobile-menu');
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            toggleMenu();
+                        }
+                    }
+                });
+            });
+        });
     </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
-    <nav class="bg-green-600 text-white p-4 shadow-md">
+    <!-- Fixed Navigation Bar -->
+    <nav class="bg-green-600 text-white p-4 shadow-md fixed w-full z-10">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center">
-                <img src="logo.jpeg" alt="OctFOOD" class="h-10 w-50 mr-3">
-                <h1 class="text-2xl font-bold"></h1>
+                <img src="logo.jpeg" alt="OptFOOD" class="h-10 w-auto mr-3">
+                <!-- <h1 class="text-2xl font-bold">OptFOOD</h1> -->
             </div>
             
             <!-- Desktop Navigation -->
             <div class="hidden md:flex space-x-6">
-                <a href="#home" class="hover:text-green-200 transition ">Home</a>
+                <a href="#home" class="hover:text-green-200 transition">Home</a>
                 <a href="#about" class="hover:text-green-200 transition">About Us</a>
-                <a href="#features" class="hover:text-green-200 transition">Features</a>
+                <a href="#features" class="hover:text-green-200 transition">How It Works</a>
+                <a href="#impact" class="hover:text-green-200 transition">Our Impact</a>
+                <!-- <a href="#testimonials" class="hover:text-green-200 transition">Testimonials</a> -->
                 <a href="login.html" class="bg-white text-green-600 px-4 py-2 rounded-full hover:bg-green-100 transition">Login</a>
                 <a href="donate.html" class="bg-yellow-400 text-green-800 px-4 py-2 rounded-full hover:bg-yellow-500 transition">Donate</a>
             </div>
@@ -45,71 +97,101 @@
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="#home" class="block px-3 py-2 rounded hover:bg-green-600">Home</a>
                 <a href="#about" class="block px-3 py-2 rounded hover:bg-green-600">About Us</a>
-                <a href="#features" class="block px-3 py-2 rounded hover:bg-green-600">Features</a>
+                <a href="#features" class="block px-3 py-2 rounded hover:bg-green-600">How It Works</a>
+                <a href="#impact" class="block px-3 py-2 rounded hover:bg-green-600">Our Impact</a>
+                <a href="#testimonials" class="block px-3 py-2 rounded hover:bg-green-600">Testimonials</a>
                 <a href="login.html" class="block px-3 py-2 rounded bg-white text-green-600 m-2">Login</a>
                 <a href="donate.html" class="block px-3 py-2 rounded bg-yellow-400 text-green-800 m-2">Donate</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header id="home" class="bg-gradient-to-r from-green-500 to-green-700 text-white py-20">
+    <!-- Hero Section with Background Image -->
+    <!-- <header id="home" class="bg-gradient-to-r from-green-500 to-green-700 text-white pt-32 pb-20" style="background-image: url('https://via.placeholder.com/1920x1080'); background-blend-mode: overlay; background-size: cover; background-position: center;"> -->
+        <header id="home" class="bg-gradient-to-r from-green-500 to-green-700 text-white py-20">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl md:text-6xl font-bold mb-6">
-                Connecting NGOs, Restaurants, and Donors
-            </h2>
-            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-                Reduce food waste, feed the hungry. Our platform bridges the gap between excess food and those who need it most.
-            </p>
-            <div class="space-x-4">
-                <a href="donate.html" class="bg-yellow-400 text-green-800 px-6 py-3 rounded-full text-lg hover:bg-yellow-500 transition inline-block">
-                    Donate Now
-                </a>
-                <a href="#about" class="bg-white text-green-600 px-6 py-3 rounded-full text-lg hover:bg-green-100 transition inline-block">
-                    Learn More
-                </a>
+            <div class="animate-fade-in">
+                <h2 class="text-4xl md:text-6xl font-bold mb-6">
+                    Connecting NGOs, Restaurants, and Donors
+                </h2>
+                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                    Reduce food waste, feed the hungry. Our platform bridges the gap between excess food and those who need it most.
+                </p>
+                <div class="space-x-4">
+                    <a href="donate.html" class="bg-yellow-400 text-green-800 px-6 py-3 rounded-full text-lg hover:bg-yellow-500 transition inline-block">
+                        Donate Now
+                    </a>
+                    <a href="#about" class="bg-white text-green-600 px-6 py-3 rounded-full text-lg hover:bg-green-100 transition inline-block">
+                        Learn More
+                    </a>
+                </div>
             </div>
         </div>
     </header>
+
+    <!-- Quick Stats Section -->
+    <section class="py-10 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-6 text-center">
+                <div class="stat-card bg-green-50 p-6 rounded-lg shadow-md transition-all duration-300">
+                    <div class="text-3xl font-bold text-green-600 mb-2">50+</div>
+                    <div class="text-gray-600">Partner Restaurants</div>
+                </div>
+                <div class="stat-card bg-green-50 p-6 rounded-lg shadow-md transition-all duration-300">
+                    <div class="text-3xl font-bold text-green-600 mb-2">25+</div>
+                    <div class="text-gray-600">NGO Partners</div>
+                </div>
+                <div class="stat-card bg-green-50 p-6 rounded-lg shadow-md transition-all duration-300">
+                    <div class="text-3xl font-bold text-green-600 mb-2">5,000+</div>
+                    <div class="text-gray-600">Meals Distributed</div>
+                </div>
+                <div class="stat-card bg-green-50 p-6 rounded-lg shadow-md transition-all duration-300">
+                    <div class="text-3xl font-bold text-green-600 mb-2">2 Tons</div>
+                    <div class="text-gray-600">Food Waste Reduced</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- About Us Section -->
     <section id="about" class="py-16 bg-white">
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h3 class="text-3xl font-bold text-green-700 mb-4">About OptFOOD</h3>
+                <div class="w-24 h-1 bg-green-500 mx-auto mb-6"></div>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    We're a dedicated platform connecting food donors with NGOs to minimize food waste and combat hunger.
+                    We're a dedicated platform connecting food donors with NGOs to minimize food waste and combat hunger in our communities.
                 </p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center">
-                    <svg class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:shadow-lg">
+                    <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users text-3xl text-green-600"></i>
+                    </div>
                     <h4 class="text-xl font-semibold mb-3 text-green-800">Community Impact</h4>
                     <p class="text-gray-600">
-                        Connect with local NGOs and restaurants to redistribute surplus food to those in need.
+                        Connect with local NGOs and restaurants to redistribute surplus food to those in need, strengthening community bonds.
                     </p>
                 </div>
                 
-                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center">
-                    <svg class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:shadow-lg">
+                    <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-hand-holding-heart text-3xl text-green-600"></i>
+                    </div>
                     <h4 class="text-xl font-semibold mb-3 text-green-800">Easy Donation</h4>
                     <p class="text-gray-600">
-                        Simple, transparent platform for individuals and businesses to donate food easily.
+                        Simple, transparent platform for individuals and businesses to donate food easily and track their impact.
                     </p>
                 </div>
                 
-                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center">
-                    <svg class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                    </svg>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md text-center transition-all duration-300 hover:shadow-lg">
+                    <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-3xl text-green-600"></i>
+                    </div>
                     <h4 class="text-xl font-semibold mb-3 text-green-800">Reduce Waste</h4>
                     <p class="text-gray-600">
-                        Minimize food waste by creating an efficient bridge between food surplus and food scarcity.
+                        Minimize food waste by creating an efficient bridge between food surplus and food scarcity, helping the environment.
                     </p>
                 </div>
             </div>
@@ -121,70 +203,276 @@
         <div class="container mx-auto px-4">
             <div class="text-center mb-12">
                 <h3 class="text-3xl font-bold text-green-700 mb-4">How It Works</h3>
+                <div class="w-24 h-1 bg-green-500 mx-auto mb-6"></div>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                     A simple, transparent process connecting food donors with those who need it most.
                 </p>
             </div>
             
             <div class="grid md:grid-cols-4 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <div class="bg-green-100 text-green-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center relative">
+                    <div class="bg-green-100 text-green-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
                         1
                     </div>
                     <h4 class="text-xl font-semibold mb-3">Register</h4>
                     <p class="text-gray-600">
-                        NGOs and restaurants create their free accounts on our platform.
+                        NGOs and restaurants create their free accounts on our platform with simple verification.
                     </p>
+                    <!-- Connecting line for desktop -->
+                    <div class="hidden md:block absolute top-1/4 left-full w-1/2 h-0.5 bg-green-300 z-0"></div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <div class="bg-green-100 text-green-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center relative">
+                    <div class="bg-green-100 text-green-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
                         2
                     </div>
                     <h4 class="text-xl font-semibold mb-3">List Surplus</h4>
                     <p class="text-gray-600">
-                        Restaurants list their surplus food available for donation.
+                        Restaurants list their surplus food available for donation with details and pickup times.
                     </p>
+                    <!-- Connecting line for desktop -->
+                    <div class="hidden md:block absolute top-1/4 left-full w-1/2 h-0.5 bg-green-300 z-0"></div>
                 </div>
                 
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <div class="bg-green-100 text-green-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center relative">
+                    <div class="bg-green-100 text-green-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
                         3
                     </div>
                     <h4 class="text-xl font-semibold mb-3">Match & Collect</h4>
                     <p class="text-gray-600">
-                        NGOs browse and request available food donations.
+                        NGOs browse and request available food donations through our user-friendly interface.
                     </p>
+                    <!-- Connecting line for desktop -->
+                    <div class="hidden md:block absolute top-1/4 left-full w-1/2 h-0.5 bg-green-300 z-0"></div>
                 </div>
                 
                 <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <div class="bg-green-100 text-green-800 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                    <div class="bg-green-100 text-green-800 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
                         4
                     </div>
                     <h4 class="text-xl font-semibold mb-3">Distribute</h4>
                     <p class="text-gray-600">
-                        Food is collected and distributed to those in need.
+                        Food is collected and distributed to those in need, with impact tracking for all parties.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-green-800 text-white py-12">
-        <div class="container mx-auto px-4 text-center">
-            <h4 class="text-2xl font-bold mb-4">Join the OptFOOD Movement</h4>
-            <p class="text-xl mb-8">Together, we can make a difference in reducing food waste and hunger.</p>
-            <div class="space-x-4">
-                <a href="#donate" class="bg-yellow-400 text-green-800 px-6 py-3 rounded-full hover:bg-yellow-500 transition">
-                    Donate Now
-                </a>
-                <a href="#login" class="bg-white text-green-600 px-6 py-3 rounded-full hover:bg-green-100 transition">
+    <!-- Impact Section -->
+    <section id="impact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-green-700 mb-4">Our Impact</h3>
+                <div class="w-24 h-1 bg-green-500 mx-auto mb-6"></div>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Together, we're making a significant difference in our communities.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-green-50 p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold mb-4 text-green-800">Environmental Impact</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Reduced over 2 tons of food waste
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Decreased carbon emissions by preventing decomposition
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Conserved water and energy resources
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="bg-green-50 p-6 rounded-lg shadow-md">
+                    <h4 class="text-xl font-semibold mb-4 text-green-800">Social Impact</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Provided over 5,000 meals to those in need
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Supported 25+ NGOs in their community missions
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-6 w-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Created a stronger bond between local businesses and communities
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-green-700 mb-4">What Our Partners Say</h3>
+                <div class="w-24 h-1 bg-green-500 mx-auto mb-6"></div>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Hear from our community of restaurants, NGOs, and volunteers.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mr-3">
+                            <i class="fas fa-utensils text-green-600"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Spice Garden Restaurant</h5>
+                            <p class="text-sm text-gray-500">Partner Restaurant</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "OptFOOD has helped us reduce waste while giving back to our community. The platform is easy to use and has become an integral part of our daily operations."
+                    </p>
+                </div>
+                
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mr-3">
+                            <i class="fas fa-hands-helping text-green-600"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Hope Foundation</h5>
+                            <p class="text-sm text-gray-500">NGO Partner</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "This platform has revolutionized how we source food for our beneficiaries. We now have consistent access to quality food that would otherwise go to waste."
+                    </p>
+                </div>
+                
+                <div class="testimonial-card bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mr-3">
+                            <i class="fas fa-heart text-green-600"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Priya Sharma</h5>
+                            <p class="text-sm text-gray-500">Volunteer</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 italic">
+                        "Volunteering with OptFOOD has been incredibly rewarding. Seeing the direct impact of food rescue on local communities is what keeps me coming back."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-600 text-white">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+            <div class="mb-8 md:mb-0 text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-4">Ready to Make a Difference?</h3>
+                <p class="text-xl text-green-100">
+                    Join our growing community of food donors, NGOs, and volunteers.
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="login.html" class="bg-white text-green-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-100 transition text-center">
                     Create Account
                 </a>
+                <a href="donate.html" class="bg-yellow-400 text-green-800 px-8 py-4 rounded-full text-lg font-semibold hover:bg-yellow-500 transition text-center">
+                    Donate Now
+                </a>
             </div>
-            <div class="mt-8 text-sm">
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <img src="logo.jpeg" alt="OptFOOD" class="h-12 w-auto mb-4">
+                    <p class="text-green-200">
+                        Together, we can make a difference in reducing food waste and hunger in our communities.
+                    </p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-white hover:text-green-200">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-200">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-200">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white hover:text-green-200">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-green-200 hover:text-white">Home</a></li>
+                        <li><a href="#about" class="text-green-200 hover:text-white">About Us</a></li>
+                        <li><a href="#features" class="text-green-200 hover:text-white">How It Works</a></li>
+                        <li><a href="#impact" class="text-green-200 hover:text-white">Our Impact</a></li>
+                        <li><a href="#testimonials" class="text-green-200 hover:text-white">Testimonials</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-green-200 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-white">Food Safety Guidelines</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#" class="text-green-200 hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-green-300"></i>
+                            <span>support@optfood.org</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone mt-1 mr-2 text-green-300"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-green-300"></i>
+                            <span>123 Green Street, Mumbai, India</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-green-700 mt-8 pt-6 text-center">
                 <p>&copy; 2025 OptFOOD. All Rights Reserved.</p>
+                <p class="text-sm text-green-300 mt-2">
+                    Making a difference one meal at a time.
+                </p>
             </div>
         </div>
     </footer>
