@@ -73,7 +73,7 @@
         <nav class="mb-8 flex justify-between items-center">
             <a href="index.html" class="flex items-center">
                 <img src="logo.jpeg" alt="OptFOOD" class="h-12 mr-3 rounded" />
-                <span class="text-2xl font-bold text-green-700">OptFOOD</span>
+                <!-- <span class="text-2xl font-bold text-green-700">OptFOOD</span> -->
             </a>
             <a href="index.html" class="text-green-700 hover:text-green-900 text-sm bg-green-100 py-2 px-4 rounded-lg transition-colors">← Back to Home</a>
         </nav>
@@ -248,6 +248,21 @@
                     </div>
                 </div>
 
+                <!-- Add this before the submit donation button -->
+                <div class="bg-green-50 p-4 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold text-green-700 mb-3">Donor Information</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="donor-name" class="block text-sm font-medium text-gray-700 mb-1">Your Name (Optional)</label>
+                            <input type="text" id="donor-name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
+                            <input type="text" id="location" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="text-center mt-8">
                     <button id="submit-donation" onclick="submitDonation()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
                         <div class="flex items-center">
@@ -280,7 +295,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center">
                             <img src="logo.jpeg" alt="OptFOOD" class="h-10 mr-2 rounded" />
-                            <span class="font-bold text-xl text-green-700">OptFOOD</span>
+                            <!-- <span class="font-bold text-xl text-green-700">OptFOOD</span> -->
                         </div>
                         <div>
                             <div id="receipt-date" class="text-gray-600 text-sm"></div>
@@ -312,133 +327,42 @@
         </div>
     </div>
 
-    <script>
-        function changeQuantity(id, amount) {
-            const input = document.getElementById(id);
-            let value = parseInt(input.value) || 0;
-            value += amount;
-            if (value < 0) value = 0;
-            input.value = value;
-            updateDonationDetails();
-        }
+    <!-- Replace this entire script section -->
+<script>
+    function changeQuantity(id, amount) {
+        // ...existing code...
+    }
 
-        function updateDonationDetails() {
-            const detailsDiv = document.getElementById('donation-details');
-            let summaryText = '';
-            let itemCount = 0;
-            const quantityInputs = document.querySelectorAll('.quantity input');
+    function updateDonationDetails() {
+        // ...existing code...
+    }
 
-            quantityInputs.forEach(input => {
-                if (parseInt(input.value) > 0) {
-                    itemCount++;
-                    const foodItem = input.closest('.food-item');
-                    const itemName = foodItem.querySelector('.font-medium').textContent;
-                    const unitText = foodItem.querySelector('.text-sm').textContent;
-                    
-                    summaryText += `${itemName}: ${input.value} ${unitText}, `;
-                }
-            });
+    function searchFood() {
+        // ...existing code...
+    }
+    
+    function submitDonation() {
+        // ...existing code...
+    }
+    
+    function closeModal() {
+        // ...existing code...
+    }
+    
+    function printReceipt() {
+        // ...existing code...
+    }
+    
+    // Close modal if clicked outside
+    window.onclick = function(event) {
+        // ...existing code...
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+        // ...existing code...
+    });
+</script>
 
-            if (summaryText) {
-                detailsDiv.innerHTML = `<div class="flex items-center text-green-700 font-medium"><svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${itemCount} items selected</div><div class="mt-1">${summaryText.slice(0, -2)}</div>`;
-            } else {
-                detailsDiv.innerHTML = 'No items selected for donation yet.';
-            }
-            
-            // Enable or disable submit button based on whether items are selected
-            const submitBtn = document.getElementById('submit-donation');
-            if (itemCount > 0) {
-                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                submitBtn.disabled = false;
-            } else {
-                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                submitBtn.disabled = true;
-            }
-        }
-
-        function searchFood() {
-            const input = document.getElementById("search");
-            const filter = input.value.toUpperCase();
-            const foodItems = document.querySelectorAll(".food-item");
-
-            foodItems.forEach(item => {
-                const itemName = item.querySelector(".font-medium");
-                if (itemName) {
-                    if (itemName.textContent.toUpperCase().indexOf(filter) > -1) {
-                        item.style.display = "";
-                    } else {
-                        item.style.display = "none";
-                    }
-                }
-            });
-        }
-        
-        function submitDonation() {
-            // Generate a receipt ID
-            const receiptId = 'OPT-' + Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('receipt-id').textContent = `Receipt #: ${receiptId}`;
-            
-            // Set current date
-            const currentDate = new Date();
-            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            document.getElementById('receipt-date').textContent = currentDate.toLocaleDateString('en-US', dateOptions);
-            
-            // Build receipt items list
-            const receiptItemsDiv = document.getElementById('receipt-items');
-            receiptItemsDiv.innerHTML = '';
-            
-            let hasItems = false;
-            const quantityInputs = document.querySelectorAll('.quantity input');
-            
-            quantityInputs.forEach(input => {
-                const value = parseInt(input.value) || 0;
-                if (value > 0) {
-                    hasItems = true;
-                    const foodItem = input.closest('.food-item');
-                    const itemName = foodItem.querySelector('.font-medium').textContent;
-                    const unitText = foodItem.querySelector('.text-sm').textContent;
-                    
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'flex justify-between py-1 border-b border-dashed border-green-200';
-                    itemDiv.innerHTML = `
-                        <span>${itemName}</span>
-                        <span class="font-medium">${value} ${unitText}</span>
-                    `;
-                    receiptItemsDiv.appendChild(itemDiv);
-                }
-            });
-            
-            if (hasItems) {
-                // Show the modal
-                document.getElementById('receipt-modal').style.display = 'block';
-            }
-        }
-        
-        function closeModal() {
-            document.getElementById('receipt-modal').style.display = 'none';
-        }
-        
-        function printReceipt() {
-            window.print();
-        }
-        
-        // Close modal if clicked outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('receipt-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-        
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDonationDetails();
-            
-            // Disable submit button initially
-            const submitBtn = document.getElementById('submit-donation');
-            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            submitBtn.disabled = true;
-        });
-    </script>
-</body>
-</html>
+<!-- Replace with this external script link -->
+<script src="donatefood.js"></script>

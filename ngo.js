@@ -734,4 +734,4 @@ function fetchDonationsFromLocalStorage() {
 }
 
 // Call this function when the page loads to attempt to fetch donations
-window.addEventListener('DOMContentLoaded', fetchDonationsFromLocalStorage);
+window.addEventListener('DOMContentLoaded', fetchDonationsFromLocalStorage)};
