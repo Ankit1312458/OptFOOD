@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Donate Items - OptFOOD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .item-card {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .item-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .quantity button {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .quantity button:hover {
+            background-color: #15803d;
+        }
+
+        .quantity input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            margin: 0 0.5rem;
+            font-weight: 600;
+        }
+
+        .item-card img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            overflow: auto;
+        }
+
+        .receipt {
+            border: 1px dashed #16a34a;
+        }
+
+        .category-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #4b5563;
+            border-bottom: 2px solid transparent;
+        }
+
+        .category-tab.active {
+            color: #16a34a;
+            border-bottom: 2px solid #16a34a;
+        }
+
+        .item-category {
+            display: none;
+        }
+
+        .item-category.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-green-50">
+    <div class="container mx-auto px-4 py-8">
+        <nav class="mb-8 flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <img src="logo.jpeg" alt="OptFOOD" class="h-12 mr-3 rounded" />
+                <!-- <span class="text-2xl font-bold text-green-700">OptFOOD</span> -->
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="donatefood.html" class="text-green-700 hover:text-green-900 text-sm bg-green-100 py-2 px-4 rounded-lg transition-colors">Donate Food</a>
+                <a href="index.html" class="text-green-700 hover:text-green-900 text-sm bg-green-100 py-2 px-4 rounded-lg transition-colors">← Back to Home</a>
+            </div>
+        </nav>
+
+        <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-green-600 to-green-500 p-8 text-center">
+                <h1 class="text-4xl font-bold text-white">Donate Clothing & Household Items</h1>
+                <p class="text-green-100 mt-2 text-lg">Your donations help improve lives in our community</p>
+            </div>
+
+            <div class="p-6">
+                <div class="donation-summary bg-green-50 p-4 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold text-green-700 mb-2">Your Donation Summary</h3>
+                    <div id="donation-details" class="text-gray-600">No items selected for donation yet.</div>
+                </div>
+
+                <div class="mb-6 relative">
+                    <label for="search" class="block text-gray-700 text-sm font-bold mb-2">Search Items:</label>
+                    <input type="text" id="search" onkeyup="searchItems()" placeholder="Search by name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-green-300"/>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 mt-6">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="category-tabs">
+                    <div class="category-tab active" onclick="showCategory('clothing')">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0zm-.464 5.535a2 2 0 10-2.828-2.828 2 2 0 002.828 2.828zm-9.2-2.828a2 2 0 00-2.828 2.828 2 2 0 002.828-2.828z"></path>
+                            </svg>
+                            Clothing
+                        </div>
+                    </div>
+                    <div class="category-tab" onclick="showCategory('household')">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            Household
+                        </div>
+                    </div>
+                    <div class="category-tab" onclick="showCategory('other')">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                            </svg>
+                            Other Items
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clothing Items -->
+                <div id="clothing" class="item-category active">
+                    <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3a2 2 0 11-4 0 2 2 0 014 0zm8 0a2 2 0 11-4 0 2 2 0 014 0zm-.464 5.535a2 2 0 10-2.828-2.828 2 2 0 002.828 2.828zm-9.2-2.828a2 2 0 00-2.828 2.828 2 2 0 002.828-2.828z"></path>
+                        </svg>
+                        Clothing Items
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="T-Shirts" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">T-Shirts</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('tshirts', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="tshirts" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('tshirts', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Pants" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Pants</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('pants', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="pants" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('pants', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Coats" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Coats</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('coats', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="coats" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('coats', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Shirts" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Shirts</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('shirts', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="shirts" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('shirts', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Sweaters" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Sweaters</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('sweaters', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="sweaters" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('sweaters', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Shoes" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Shoes</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('shoes', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="shoes" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('shoes', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pairs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Household Items -->
+                <div id="household" class="item-category">
+                    <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        Household Items
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Bed Sheets" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Bed Sheets</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('bedsheets', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="bedsheets" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('bedsheets', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">sets</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Blankets" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Blankets</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('blankets', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="blankets" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('blankets', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Towels" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Towels</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('towels', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="towels" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('towels', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Pillows" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Pillows</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('pillows', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="pillows" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('pillows', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Curtains" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Curtains</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('curtains', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="curtains" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('curtains', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pairs</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Kitchenware" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Kitchenware</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('kitchenware', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="kitchenware" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('kitchenware', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Items -->
+                <div id="other" class="item-category">
+                    <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                        Other Items
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Toys" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Toys</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('toys', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="toys" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('toys', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Books" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Books</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('books', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="books" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('books', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="School Supplies" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">School Supplies</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('school_supplies', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="school_supplies" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('school_supplies', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">sets</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Backpacks" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Backpacks</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('backpacks', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="backpacks" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('backpacks', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Baby Items" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Baby Items</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('baby_items', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="baby_items" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('baby_items', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">sets</span>
+                        </div>
+
+                        <div class="item-card bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                            <img src="/api/placeholder/120/120" alt="Electronics" class="mb-2 rounded-full shadow"/>
+                            <span class="font-medium text-lg mb-2">Electronics</span>
+                            <div class="quantity flex items-center">
+                                <button onclick="changeQuantity('electronics', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                                <input type="number" id="electronics" value="0" min="0" readonly>
+                                <button onclick="changeQuantity('electronics', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                            </div>
+                            <span class="text-sm text-gray-500 mt-1">pieces</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg mt-6">
+                    <h3 class="text-xl font-bold text-green-700 mb-4">Special Instructions</h3>
+                    <textarea id="special-instructions" rows="3" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-green-300" placeholder="Add any special instructions or notes about your donation here..."></textarea>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="submit-donation" onclick="submitDonation()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Submit Donation
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Donation Receipt Modal -->
+    <div id="receipt-modal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white w-full max-w-md rounded-lg shadow-xl overflow-hidden">
+                <div class="bg-green-600 p-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-white">Donation Receipt</h2>
+                        <button onclick="closeModal()" class="text-white hover:text-green-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <img src="logo.jpeg" alt="OptFOOD" class="h-10 mr-2 rounded" />
+                            <span class="font-bold text-xl text-green-700">OptFOOD</span>
+                        </div>
+                        <div>
+                            <div id="receipt-date" class="text-gray-600 text-sm"></div>

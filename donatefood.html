@@ -8,6 +8,12 @@
     <style>
         body {
             background-color: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .food-item {
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
         }
 
         .food-item:hover {
@@ -23,6 +29,11 @@
             padding: 0.25rem 0.75rem;
             font-weight: bold;
             font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .quantity button:hover {
+            background-color: #15803d;
         }
 
         .quantity input {
@@ -33,6 +44,28 @@
             margin: 0 0.5rem;
             font-weight: 600;
         }
+
+        .food-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            overflow: auto;
+        }
+
+        .receipt {
+            border: 1px dashed #16a34a;
+        }
     </style>
 </head>
 <body class="bg-green-50">
@@ -40,149 +73,241 @@
         <nav class="mb-8 flex justify-between items-center">
             <a href="index.html" class="flex items-center">
                 <img src="logo.jpeg" alt="OptFOOD" class="h-12 mr-3 rounded" />
-                </a>
-            <a href="index.html" class="text-green-700 hover:text-green-900 text-sm">← Back to Home</a>
+                <span class="text-2xl font-bold text-green-700">OptFOOD</span>
+            </a>
+            <a href="index.html" class="text-green-700 hover:text-green-900 text-sm bg-green-100 py-2 px-4 rounded-lg transition-colors">← Back to Home</a>
         </nav>
 
-        <div class="max-w-3xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
-            <div class="bg-green-600 p-6 text-center">
+        <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-green-600 to-green-500 p-8 text-center">
                 <h1 class="text-4xl font-bold text-white">Donate Food</h1>
                 <p class="text-green-100 mt-2 text-lg">Help Us Feed Those in Need</p>
             </div>
 
             <div class="p-6">
-                <div class="mb-6">
+                <div class="donation-summary bg-green-50 p-4 rounded-lg mb-6">
+                    <h3 class="text-lg font-semibold text-green-700 mb-2">Your Donation Summary</h3>
+                    <div id="donation-details" class="text-gray-600">No items selected for donation yet.</div>
+                </div>
+
+                <div class="mb-6 relative">
                     <label for="search" class="block text-gray-700 text-sm font-bold mb-2">Search Food Items:</label>
-                    <input type="text" id="search" onkeyup="searchFood()" placeholder="Search by name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                    <input type="text" id="search" onkeyup="searchFood()" placeholder="Search by name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring focus:ring-green-300"/>
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 mt-6">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-green-700 mb-4">Raw Food Items</h2>
+                <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                    </svg>
+                    Raw Food Items
+                </h2>
                 <div id="raw-food-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://tse2.mm.bing.net/th/id/OIP.5eBMgTUEqc5b76Dc0uyKMAHaEK?rs=1&pid=ImgDetMain" alt="Rice" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.5eBMgTUEqc5b76Dc0uyKMAHaEK?rs=1&pid=ImgDetMain" alt="Rice" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Rice</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('rice', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('rice', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="rice" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('rice', +1)">+</button>
+                            <button onclick="changeQuantity('rice', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">kg</span>
                     </div>
 
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://www.ruchiskitchen.com/wp-content/uploads/2014/06/Chana-dal2.jpg" alt="Dal" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://www.ruchiskitchen.com/wp-content/uploads/2014/06/Chana-dal2.jpg" alt="Dal" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Dal</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('dal', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('dal', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="dal" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('dal', +1)">+</button>
+                            <button onclick="changeQuantity('dal', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">kg</span>
                     </div>
 
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://tse4.mm.bing.net/th/id/OIP.-GfGzAn4iy8XVJ7ls6FsHgHaFv?rs=1&pid=ImgDetMain" alt="Banana" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse4.mm.bing.net/th/id/OIP.-GfGzAn4iy8XVJ7ls6FsHgHaFv?rs=1&pid=ImgDetMain" alt="Banana" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Banana</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('Banana', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('Banana', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="Banana" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('Banana', +1)">+</button>
+                            <button onclick="changeQuantity('Banana', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">dozen</span>
                     </div>
 
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://th.bing.com/th/id/R.80a42d45c58ff027d245f251fa0a38bf?rik=Z%2fOIk6UkVuFneQ&riu=http%3a%2f%2fwww.baltana.com%2ffiles%2fwallpapers-1%2fMilk-HD-Wallpapers-02101.jpg&ehk=aD%2bWNVScnwSdA6HtMFKM8HXjF6C4jAZS5Jf5IUEkPf8%3d&risl=&pid=ImgRaw&r=0" alt="Milk" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://th.bing.com/th/id/R.80a42d45c58ff027d245f251fa0a38bf?rik=Z%2fOIk6UkVuFneQ&riu=http%3a%2f%2fwww.baltana.com%2ffiles%2fwallpapers-1%2fMilk-HD-Wallpapers-02101.jpg&ehk=aD%2bWNVScnwSdA6HtMFKM8HXjF6C4jAZS5Jf5IUEkPf8%3d&risl=&pid=ImgRaw&r=0" alt="Milk" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Milk</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('Milk', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('Milk', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="Milk" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('Milk', +1)">+</button>
+                            <button onclick="changeQuantity('Milk', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">liters</span>
                     </div>
 
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://th.bing.com/th/id/R.ee0dd53830acf4ea8b06f11f9b1f7bba?rik=hVknUJjZAz0e3g&riu=http%3a%2f%2fphotos.demandstudios.com%2fgetty%2farticle%2f142%2f105%2f87532189.jpg&ehk=0dzGltL6%2f9gfKbRP90EC2YfHlQbzL69QCRqwydVK8S4%3d&risl=1&pid=ImgRaw&r=0" alt="Eggs" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://th.bing.com/th/id/R.ee0dd53830acf4ea8b06f11f9b1f7bba?rik=hVknUJjZAz0e3g&riu=http%3a%2f%2fphotos.demandstudios.com%2fgetty%2farticle%2f142%2f105%2f87532189.jpg&ehk=0dzGltL6%2f9gfKbRP90EC2YfHlQbzL69QCRqwydVK8S4%3d&risl=1&pid=ImgRaw&r=0" alt="Eggs" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Eggs</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('Eggs', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('Eggs', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="Eggs" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('Eggs', +1)">+</button>
+                            <button onclick="changeQuantity('Eggs', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">dozen</span>
                     </div>
 
-                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-                        <img src="https://wallpaperaccess.com/full/5393865.jpg" alt="Fish" class="mb-2 rounded-full"/>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://wallpaperaccess.com/full/5393865.jpg" alt="Fish" class="mb-2 rounded-full shadow"/>
                         <span class="font-medium text-lg mb-2">Fish</span>
-                        <div class="quantity">
-                            <button onclick="changeQuantity('Fish', -1)">-</button>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('Fish', -1)" class="hover:bg-green-700 transition-colors">-</button>
                             <input type="number" id="Fish" value="0" min="0" readonly>
-                            <button onclick="changeQuantity('Fish', +1)">+</button>
+                            <button onclick="changeQuantity('Fish', 1)" class="hover:bg-green-700 transition-colors">+</button>
                         </div>
+                        <span class="text-sm text-gray-500 mt-1">kg</span>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-green-700 mb-4">Prepared Food Items</h2>
-<div id="prepared-food" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                <h2 class="text-2xl font-bold text-green-700 mb-4 flex items-center">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Prepared Food Items
+                </h2>
+                <div id="prepared-food" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse4.mm.bing.net/th/id/OIP._V5oZWYjF7UdCu6HiV8z_AHaE7?rs=1&pid=ImgDetMain" alt="Rajma" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Rajma</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('rajma', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="rajma" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('rajma', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">servings</span>
+                    </div>
 
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://tse4.mm.bing.net/th/id/OIP._V5oZWYjF7UdCu6HiV8z_AHaE7?rs=1&pid=ImgDetMain" alt="Rajma" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Rajma</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('rajma', 1)">+</button>
-            <input type="number" id="rajma" value="0" min="0" readonly>
-            <button onclick="changeQuantity('rajma', -1)">-</button>
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.Z09QMBkaUUPel9sE8RfqPAHaHa?rs=1&pid=ImgDetMain" alt="Choley" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Choley</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('choley', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="choley" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('choley', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">servings</span>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://s4.scoopwhoop.com/son/par/f3.jpg" alt="Paranthas" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Paranthas</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('paranthas', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="paranthas" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('paranthas', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">pieces</span>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse1.mm.bing.net/th/id/OIP.loKzQvbLzKf2cNuDhivd5QHaJ4?rs=1&pid=ImgDetMain" alt="Mixed Veg" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Mixed Veg</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('mixed_veg', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="mixed_veg" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('mixed_veg', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">servings</span>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://recipes.timesofindia.com/photo/52743612.cms" alt="Rasgulla" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Rasgulla</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('rasgulla', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="rasgulla" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('rasgulla', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">pieces</span>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg shadow-sm flex flex-col items-center text-center">
+                        <img src="https://tse3.mm.bing.net/th/id/OIP.2i3JoqcBJvFraT-Vk_HsrQHaLH?rs=1&pid=ImgDetMain" alt="Boondi Raita" class="mb-2 rounded-full shadow"/>
+                        <span class="font-medium text-lg mb-2">Boondi Raita</span>
+                        <div class="quantity flex items-center">
+                            <button onclick="changeQuantity('boondi_raita', -1)" class="hover:bg-green-700 transition-colors">-</button>
+                            <input type="number" id="boondi_raita" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('boondi_raita', 1)" class="hover:bg-green-700 transition-colors">+</button>
+                        </div>
+                        <span class="text-sm text-gray-500 mt-1">servings</span>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button id="submit-donation" onclick="submitDonation()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all transform hover:scale-105">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Submit Donation
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://tse2.mm.bing.net/th/id/OIP.Z09QMBkaUUPel9sE8RfqPAHaHa?rs=1&pid=ImgDetMain" alt="Choley" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Choley</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('choley', 1)">+</button>
-            <input type="number" id="choley" value="0" min="0" readonly>
-            <button onclick="changeQuantity('choley', -1)">-</button>
-        </div>
-    </div>
-
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://s4.scoopwhoop.com/son/par/f3.jpg" alt="Paranthas" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Paranthas</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('paranthas', 1)">+</button>
-            <input type="number" id="paranthas" value="0" min="0" readonly>
-            <button onclick="changeQuantity('paranthas', -1)">-</button>
-        </div>
-    </div>
-
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://tse1.mm.bing.net/th/id/OIP.loKzQvbLzKf2cNuDhivd5QHaJ4?rs=1&pid=ImgDetMain" alt="Mixed Veg" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Mixed Veg</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('mixed_veg', 1)">+</button>
-            <input type="number" id="mixed_veg" value="0" min="0" readonly>
-            <button onclick="changeQuantity('mixed_veg', -1)">-</button>
-        </div>
-    </div>
-
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://recipes.timesofindia.com/photo/52743612.cms" alt="Rasgulla" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Rasgulla</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('rasgulla', 1)">+</button>
-            <input type="number" id="rasgulla" value="0" min="0" readonly>
-            <button onclick="changeQuantity('rasgulla', -1)">-</button>
-        </div>
-    </div>
-
-    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
-        <img src="https://tse3.mm.bing.net/th/id/OIP.2i3JoqcBJvFraT-Vk_HsrQHaLH?rs=1&pid=ImgDetMain" alt="Boondi Raita" class="mb-2 rounded-full"/>
-        <span class="font-medium text-lg mb-2">Boondi Raita</span>
-        <div class="quantity">
-            <button onclick="changeQuantity('boondi_raita', 1)">+</button>
-            <input type="number" id="boondi_raita" value="0" min="0" readonly>
-            <button onclick="changeQuantity('boondi_raita', -1)">-</button>
-        </div>
-    </div>
-
-</div></div>
+    <!-- Donation Receipt Modal -->
+    <div id="receipt-modal" class="modal">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white w-full max-w-md rounded-lg shadow-xl overflow-hidden">
+                <div class="bg-green-600 p-4">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-white">Donation Receipt</h2>
+                        <button onclick="closeModal()" class="text-white hover:text-green-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <img src="logo.jpeg" alt="OptFOOD" class="h-10 mr-2 rounded" />
+                            <span class="font-bold text-xl text-green-700">OptFOOD</span>
+                        </div>
+                        <div>
+                            <div id="receipt-date" class="text-gray-600 text-sm"></div>
+                            <div id="receipt-id" class="text-gray-600 text-sm"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-lg mb-2">Thank You for Your Donation!</h3>
+                        <p class="text-gray-600 text-sm">Your generosity helps feed those in need.</p>
+                    </div>
+                    
+                    <div class="receipt p-4 rounded-lg bg-green-50 mb-4">
+                        <h4 class="font-medium mb-2">Items Donated:</h4>
+                        <div id="receipt-items" class="text-gray-700"></div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-between">
+                        <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Close</button>
+                        <button onclick="printReceipt()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                            </svg>
+                            Print
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -200,19 +325,34 @@
         function updateDonationDetails() {
             const detailsDiv = document.getElementById('donation-details');
             let summaryText = '';
+            let itemCount = 0;
             const quantityInputs = document.querySelectorAll('.quantity input');
 
             quantityInputs.forEach(input => {
                 if (parseInt(input.value) > 0) {
-                    const itemName = input.id.charAt(0).toUpperCase() + input.id.slice(1);
-                    summaryText += `${itemName}: ${input.value}, `;
+                    itemCount++;
+                    const foodItem = input.closest('.food-item');
+                    const itemName = foodItem.querySelector('.font-medium').textContent;
+                    const unitText = foodItem.querySelector('.text-sm').textContent;
+                    
+                    summaryText += `${itemName}: ${input.value} ${unitText}, `;
                 }
             });
 
             if (summaryText) {
-                detailsDiv.textContent = `You are donating: ${summaryText.slice(0, -2)}`;
+                detailsDiv.innerHTML = `<div class="flex items-center text-green-700 font-medium"><svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> ${itemCount} items selected</div><div class="mt-1">${summaryText.slice(0, -2)}</div>`;
             } else {
-                detailsDiv.textContent = 'No items selected for donation yet.';
+                detailsDiv.innerHTML = 'No items selected for donation yet.';
+            }
+            
+            // Enable or disable submit button based on whether items are selected
+            const submitBtn = document.getElementById('submit-donation');
+            if (itemCount > 0) {
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                submitBtn.disabled = true;
             }
         }
 
@@ -232,6 +372,73 @@
                 }
             });
         }
+        
+        function submitDonation() {
+            // Generate a receipt ID
+            const receiptId = 'OPT-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('receipt-id').textContent = `Receipt #: ${receiptId}`;
+            
+            // Set current date
+            const currentDate = new Date();
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('receipt-date').textContent = currentDate.toLocaleDateString('en-US', dateOptions);
+            
+            // Build receipt items list
+            const receiptItemsDiv = document.getElementById('receipt-items');
+            receiptItemsDiv.innerHTML = '';
+            
+            let hasItems = false;
+            const quantityInputs = document.querySelectorAll('.quantity input');
+            
+            quantityInputs.forEach(input => {
+                const value = parseInt(input.value) || 0;
+                if (value > 0) {
+                    hasItems = true;
+                    const foodItem = input.closest('.food-item');
+                    const itemName = foodItem.querySelector('.font-medium').textContent;
+                    const unitText = foodItem.querySelector('.text-sm').textContent;
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'flex justify-between py-1 border-b border-dashed border-green-200';
+                    itemDiv.innerHTML = `
+                        <span>${itemName}</span>
+                        <span class="font-medium">${value} ${unitText}</span>
+                    `;
+                    receiptItemsDiv.appendChild(itemDiv);
+                }
+            });
+            
+            if (hasItems) {
+                // Show the modal
+                document.getElementById('receipt-modal').style.display = 'block';
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('receipt-modal').style.display = 'none';
+        }
+        
+        function printReceipt() {
+            window.print();
+        }
+        
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('receipt-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDonationDetails();
+            
+            // Disable submit button initially
+            const submitBtn = document.getElementById('submit-donation');
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            submitBtn.disabled = true;
+        });
     </script>
 </body>
 </html>
