@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Donate Food - OptFOOD</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+
+        .food-item:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .quantity button {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .quantity input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            margin: 0 0.5rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-green-50">
+    <div class="container mx-auto px-4 py-8">
+        <nav class="mb-8 flex justify-between items-center">
+            <a href="index.html" class="flex items-center">
+                <img src="logo.jpeg" alt="OptFOOD" class="h-12 mr-3 rounded" />
+                </a>
+            <a href="index.html" class="text-green-700 hover:text-green-900 text-sm">← Back to Home</a>
+        </nav>
+
+        <div class="max-w-3xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+            <div class="bg-green-600 p-6 text-center">
+                <h1 class="text-4xl font-bold text-white">Donate Food</h1>
+                <p class="text-green-100 mt-2 text-lg">Help Us Feed Those in Need</p>
+            </div>
+
+            <div class="p-6">
+                <div class="mb-6">
+                    <label for="search" class="block text-gray-700 text-sm font-bold mb-2">Search Food Items:</label>
+                    <input type="text" id="search" onkeyup="searchFood()" placeholder="Search by name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                </div>
+
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Raw Food Items</h2>
+                <div id="raw-food-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://tse2.mm.bing.net/th/id/OIP.5eBMgTUEqc5b76Dc0uyKMAHaEK?rs=1&pid=ImgDetMain" alt="Rice" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Rice</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('rice', -1)">-</button>
+                            <input type="number" id="rice" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('rice', +1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://www.ruchiskitchen.com/wp-content/uploads/2014/06/Chana-dal2.jpg" alt="Dal" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Dal</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('dal', -1)">-</button>
+                            <input type="number" id="dal" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('dal', +1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://tse4.mm.bing.net/th/id/OIP.-GfGzAn4iy8XVJ7ls6FsHgHaFv?rs=1&pid=ImgDetMain" alt="Banana" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Banana</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('Banana', -1)">-</button>
+                            <input type="number" id="Banana" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('Banana', +1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://th.bing.com/th/id/R.80a42d45c58ff027d245f251fa0a38bf?rik=Z%2fOIk6UkVuFneQ&riu=http%3a%2f%2fwww.baltana.com%2ffiles%2fwallpapers-1%2fMilk-HD-Wallpapers-02101.jpg&ehk=aD%2bWNVScnwSdA6HtMFKM8HXjF6C4jAZS5Jf5IUEkPf8%3d&risl=&pid=ImgRaw&r=0" alt="Milk" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Milk</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('Milk', -1)">-</button>
+                            <input type="number" id="Milk" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('Milk', +1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://th.bing.com/th/id/R.ee0dd53830acf4ea8b06f11f9b1f7bba?rik=hVknUJjZAz0e3g&riu=http%3a%2f%2fphotos.demandstudios.com%2fgetty%2farticle%2f142%2f105%2f87532189.jpg&ehk=0dzGltL6%2f9gfKbRP90EC2YfHlQbzL69QCRqwydVK8S4%3d&risl=1&pid=ImgRaw&r=0" alt="Eggs" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Eggs</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('Eggs', -1)">-</button>
+                            <input type="number" id="Eggs" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('Eggs', +1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+                        <img src="https://wallpaperaccess.com/full/5393865.jpg" alt="Fish" class="mb-2 rounded-full"/>
+                        <span class="font-medium text-lg mb-2">Fish</span>
+                        <div class="quantity">
+                            <button onclick="changeQuantity('Fish', -1)">-</button>
+                            <input type="number" id="Fish" value="0" min="0" readonly>
+                            <button onclick="changeQuantity('Fish', +1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl font-bold text-green-700 mb-4">Prepared Food Items</h2>
+<div id="prepared-food" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://tse4.mm.bing.net/th/id/OIP._V5oZWYjF7UdCu6HiV8z_AHaE7?rs=1&pid=ImgDetMain" alt="Rajma" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Rajma</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('rajma', 1)">+</button>
+            <input type="number" id="rajma" value="0" min="0" readonly>
+            <button onclick="changeQuantity('rajma', -1)">-</button>
+        </div>
+    </div>
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://tse2.mm.bing.net/th/id/OIP.Z09QMBkaUUPel9sE8RfqPAHaHa?rs=1&pid=ImgDetMain" alt="Choley" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Choley</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('choley', 1)">+</button>
+            <input type="number" id="choley" value="0" min="0" readonly>
+            <button onclick="changeQuantity('choley', -1)">-</button>
+        </div>
+    </div>
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://s4.scoopwhoop.com/son/par/f3.jpg" alt="Paranthas" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Paranthas</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('paranthas', 1)">+</button>
+            <input type="number" id="paranthas" value="0" min="0" readonly>
+            <button onclick="changeQuantity('paranthas', -1)">-</button>
+        </div>
+    </div>
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://tse1.mm.bing.net/th/id/OIP.loKzQvbLzKf2cNuDhivd5QHaJ4?rs=1&pid=ImgDetMain" alt="Mixed Veg" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Mixed Veg</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('mixed_veg', 1)">+</button>
+            <input type="number" id="mixed_veg" value="0" min="0" readonly>
+            <button onclick="changeQuantity('mixed_veg', -1)">-</button>
+        </div>
+    </div>
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://recipes.timesofindia.com/photo/52743612.cms" alt="Rasgulla" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Rasgulla</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('rasgulla', 1)">+</button>
+            <input type="number" id="rasgulla" value="0" min="0" readonly>
+            <button onclick="changeQuantity('rasgulla', -1)">-</button>
+        </div>
+    </div>
+
+    <div class="food-item bg-white p-4 rounded-lg border flex flex-col items-center text-center">
+        <img src="https://tse3.mm.bing.net/th/id/OIP.2i3JoqcBJvFraT-Vk_HsrQHaLH?rs=1&pid=ImgDetMain" alt="Boondi Raita" class="mb-2 rounded-full"/>
+        <span class="font-medium text-lg mb-2">Boondi Raita</span>
+        <div class="quantity">
+            <button onclick="changeQuantity('boondi_raita', 1)">+</button>
+            <input type="number" id="boondi_raita" value="0" min="0" readonly>
+            <button onclick="changeQuantity('boondi_raita', -1)">-</button>
+        </div>
+    </div>
+
+</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeQuantity(id, amount) {
+            const input = document.getElementById(id);
+            let value = parseInt(input.value) || 0;
+            value += amount;
+            if (value < 0) value = 0;
+            input.value = value;
+            updateDonationDetails();
+        }
+
+        function updateDonationDetails() {
+            const detailsDiv = document.getElementById('donation-details');
+            let summaryText = '';
+            const quantityInputs = document.querySelectorAll('.quantity input');
+
+            quantityInputs.forEach(input => {
+                if (parseInt(input.value) > 0) {
+                    const itemName = input.id.charAt(0).toUpperCase() + input.id.slice(1);
+                    summaryText += `${itemName}: ${input.value}, `;
+                }
+            });
+
+            if (summaryText) {
+                detailsDiv.textContent = `You are donating: ${summaryText.slice(0, -2)}`;
+            } else {
+                detailsDiv.textContent = 'No items selected for donation yet.';
+            }
+        }
+
+        function searchFood() {
+            const input = document.getElementById("search");
+            const filter = input.value.toUpperCase();
+            const foodItems = document.querySelectorAll(".food-item");
+
+            foodItems.forEach(item => {
+                const itemName = item.querySelector(".font-medium");
+                if (itemName) {
+                    if (itemName.textContent.toUpperCase().indexOf(filter) > -1) {
+                        item.style.display = "";
+                    } else {
+                        item.style.display = "none";
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
